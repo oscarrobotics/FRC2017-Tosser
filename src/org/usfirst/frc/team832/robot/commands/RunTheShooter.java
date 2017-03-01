@@ -1,21 +1,10 @@
 package org.usfirst.frc.team832.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import org.usfirst.frc.team832.robot.*;
-import org.usfirst.frc.team832.robot.RobotMap;
-
-import com.ctre.CANTalon;
-
-/**
- *
- */
-
 
 public class RunTheShooter extends Command {
 	public RunTheShooter() {
-		// Use requires() here to declare subsystem dependencies
 		requires(Robot.shooter);
 	}
 
@@ -27,13 +16,7 @@ public class RunTheShooter extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		RobotMap.shooterMotor1.changeControlMode(CANTalon.TalonControlMode.Speed);
-		double throttle = Robot.oi.operatorStick.getRawAxis(2);
-		throttle += 1;
-		throttle /= 2;
-		throttle *= 3500; //CHANGED FROM 4500
-		SmartDashboard.putNumber("Throttle", throttle);
-		RobotMap.shooterMotor1.set(2000);
+		Robot.shooter.runShooter();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -45,9 +28,7 @@ public class RunTheShooter extends Command {
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
-        RobotMap.shooterMotor1.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-		
-		RobotMap.shooterMotor1.set(0.0);
+        Robot.shooter.stopShooter();
 	}
 
 	// Called when another command which requires one or more of the same

@@ -4,9 +4,9 @@ import com.ctre.*;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Compressor;
@@ -23,12 +23,12 @@ public class RobotMap {
 
 	public static AHRS navx;
 	public static SerialPort.Port navXSerialPort = SerialPort.Port.kUSB;
-	
-	public static boolean isPracticeBot = false;
+
+	public static boolean isPracticeBot = true;
 
 	// shooter
-	public static int shooterMotor1ID = 1;
-	public static int shooterMotor2ID = 2;
+	public static int shooterMotor1ID = 7;
+	public static int shooterMotor2ID = 8;
 	public static CANTalon shooterMotor1;
 	public static CANTalon shooterMotor2;
 
@@ -59,7 +59,8 @@ public class RobotMap {
 	public static int pcmID = 9;
 	public static Compressor compressor;
 	public static DoubleSolenoid gearShiftSol;
-	public static DoubleSolenoid winchTiltSol;
+	public static Solenoid winchTiltSol;
+	public static DoubleSolenoid ballDoorSol;
 
 	// electronics
 	public static int pdpID = 0;
@@ -94,7 +95,6 @@ public class RobotMap {
 		
 		shooterMotor2.changeControlMode(CANTalon.TalonControlMode.Follower);
 		shooterMotor2.set(shooterMotor1.getDeviceID());
-
 		shooterMotor1.clearStickyFaults();
 		shooterMotor2.clearStickyFaults();
 		
@@ -129,7 +129,8 @@ public class RobotMap {
 		compressor = new Compressor(pcmID);
 		compressor.setClosedLoopControl(true);
 		gearShiftSol = new DoubleSolenoid(pcmID,0, 1);
-		winchTiltSol = new DoubleSolenoid(pcmID,2, 3);
+		winchTiltSol = new Solenoid(pcmID,2);
+		ballDoorSol = new DoubleSolenoid(pcmID, 3, 4);
 
 		// winch
 		bigWinch = new Spark(winchPWMPort);
