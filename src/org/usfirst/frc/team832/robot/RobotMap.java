@@ -21,18 +21,17 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
  */
 public class RobotMap {
 
-	public static AHRS navx;
-	public static SerialPort.Port navXSerialPort = SerialPort.Port.kUSB;
+//	public static AHRS navx;
+//	public static SerialPort.Port navXSerialPort = SerialPort.Port.kUSB;
 
-	public static boolean isPracticeBot = true;
 
 	// shooter
-	public static int shooterMotor1ID = 7;
-	public static int shooterMotor2ID = 8;
+//	public static int shooterMotor1ID = 7;
+//	public static int shooterMotor2ID = 8;
 	public static CANTalon shooterMotor1;
 	public static CANTalon shooterMotor2;
 
-	// drivetrain
+//	// drivetrain
 	public static int left1ID = 1;
 	public static int left2ID = 2;
 	public static int right1ID = 3;
@@ -44,19 +43,19 @@ public class RobotMap {
 	public static RobotDrive westCoast;
 
 	// winch
-	public static int winchPWMPort = 0;
+	public static final int winchPWMPort = 0;
 	public static Spark bigWinch;
 
 	// turntable
-	public static int turntableID = 5;
+	public static final int turntableID = 5;
 	public static CANTalon turnTable;
 
 	// intake
-	public static int intakeID = 6;
+	public static final int intakeID = 6;
 	public static CANTalon collectorRoller;
 
 	// pneumatics
-	public static int pcmID = 9;
+	public static final int pcmID = 9;
 	public static Compressor compressor;
 	public static DoubleSolenoid gearShiftSol;
 	public static Solenoid winchTiltSol;
@@ -65,29 +64,23 @@ public class RobotMap {
 	// electronics
 	public static int pdpID = 0;
 	public static PowerDistributionPanel powerDP;
-
-	public static void switchRobotConfig() {
-		if (isPracticeBot) {
-
-		}
-	}
-
+	
 	public static void init() {
 
 		// inits navX IMU
-		try {
-			navx = new AHRS(navXSerialPort);
-		} catch (RuntimeException ex) {
-			DriverStation.reportError("Error instantiating navX-Micro:  " + ex.getMessage(), true);
-		}
+//		try {
+//			navx = new AHRS(navXSerialPort);
+//		} catch (RuntimeException ex) {
+//			DriverStation.reportError("Error instantiating navX-Micro:  " + ex.getMessage(), true);
+//		}
 		
 		// pdp
 		powerDP = new PowerDistributionPanel(0);
 		powerDP.clearStickyFaults();
 		
 		// shooter
-		shooterMotor1 = new CANTalon(shooterMotor1ID);
-		shooterMotor2 = new CANTalon(shooterMotor2ID);
+		shooterMotor1 = new CANTalon(7);
+		shooterMotor2 = new CANTalon(8);
 		
 		shooterMotor1.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
 		shooterMotor1.changeControlMode(CANTalon.TalonControlMode.Speed);
@@ -98,11 +91,11 @@ public class RobotMap {
 		shooterMotor1.clearStickyFaults();
 		shooterMotor2.clearStickyFaults();
 		
-		// drivetrain
-		left1 = new CANTalon(left1ID);
-		left2 = new CANTalon(left2ID);
-		right1 = new CANTalon(right1ID);
-		right2 = new CANTalon(right2ID);
+		//drivetrain
+		left1 = new CANTalon(1);
+		left2 = new CANTalon(2);
+		right1 = new CANTalon(3);
+		right2 = new CANTalon(4);
 		
 		
 		left2.changeControlMode(CANTalon.TalonControlMode.Follower);
@@ -118,22 +111,22 @@ public class RobotMap {
 		westCoast = new RobotDrive(left1, right1);
 
 		// intake
-		collectorRoller = new CANTalon(intakeID);
+		collectorRoller = new CANTalon(6);
 		collectorRoller.clearStickyFaults();
 		
 		// turntable
-		turnTable = new CANTalon(turntableID);
+		turnTable = new CANTalon(5);
 		turnTable.clearStickyFaults();
 		
 		// pneumatics
-		compressor = new Compressor(pcmID);
+		compressor = new Compressor(9);
 		compressor.setClosedLoopControl(true);
-		gearShiftSol = new DoubleSolenoid(pcmID,0, 1);
-		winchTiltSol = new Solenoid(pcmID,2);
-		ballDoorSol = new DoubleSolenoid(pcmID, 3, 4);
+		gearShiftSol = new DoubleSolenoid(9,1, 0);
+		winchTiltSol = new Solenoid(9,2);
+		ballDoorSol = new DoubleSolenoid(9, 3, 4);
 
 		// winch
-		bigWinch = new Spark(winchPWMPort);
+		bigWinch = new Spark(0);
 
 	}
 }

@@ -19,12 +19,22 @@ public class Pneumatics extends Subsystem {
 	public static boolean lowGear;
 	
 	public void shiftToLow() {
+		//gearShift.set(Value.kOff);
 		gearShift.set(Value.kForward);
 		lowGear = true;
 	}
 	public void shiftToHigh() {
+		//gearShift.set(Value.kOff);
 		gearShift.set(Value.kReverse);
 		lowGear = false;
+	}
+	
+	public void openBallDoor() {
+		ballDoor.set(Value.kForward);
+	}
+	
+	public void closeBallDoor() {
+		ballDoor.set(Value.kReverse);
 	}
 
     public void initDefaultCommand() {
@@ -33,4 +43,5 @@ public class Pneumatics extends Subsystem {
     }
    
 }
+
 

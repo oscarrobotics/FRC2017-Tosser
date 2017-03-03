@@ -7,11 +7,9 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import org.usfirst.frc.team832.robot.commands.*;
@@ -34,12 +32,11 @@ public class Robot extends IterativeRobot {
 	public static Turntable turnTable;
 	public static OI oi;
 
-	public static double shooterSetRPM = RobotMap.shooterMotor1.getSetpoint(); // what the shooter should be at
-	double shooterActualRPM = RobotMap.shooterMotor1.getSpeed(); // what it is at
-	double shooterCurrentDraw = RobotMap.shooterMotor1.getOutputCurrent() + RobotMap.shooterMotor2.getOutputCurrent();
-	
+//	public static double shooterSetRPM = RobotMap.shooterMotor1.getSetpoint(); // what the shooter should be set at
+//	public static double shooterActualRPM = RobotMap.shooterMotor1.getSpeed(); // what it is at
+//	public static double shooterCurrentDraw = RobotMap.shooterMotor1.getOutputCurrent() + RobotMap.shooterMotor2.getOutputCurrent();
 
-	public static AHRS navx = RobotMap.navx;
+//	public static AHRS navx = RobotMap.navx;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -49,11 +46,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		
-		
-		RobotMap.init();
-		
-		
+
+		try {
+			RobotMap.init();
+		} catch (ExceptionInInitializerError ex) {
+			System.out.println(ex.getMessage());
+		}
+
 		shooter = new Shooter();
 		turnTable = new Turntable();
 		westCoastDrive = new WestCoastDrive();
@@ -61,98 +60,14 @@ public class Robot extends IterativeRobot {
 		collector = new Collector();
 		bigWinch = new Winch();
 		oi = new OI();
-		chooser.addDefault("Default Auto", new RunTheShooter());
+		chooser.addDefault("Default Auto", null);
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
-	
-	
+
 	public void sendData() {
-		
-		try {
-			
-//			SmartDashboard.putBoolean("IMU_Connected", navx.isConnected());
-//			SmartDashboard.putBoolean("IMU_IsCalibrating", navx.isCalibrating());
-//			SmartDashboard.putNumber("IMU_Yaw", navx.getYaw());
-//			SmartDashboard.putNumber("IMU_Pitch", navx.getPitch());
-//			SmartDashboard.putNumber("IMU_Roll", navx.getRoll());
-//
-//			/* Display tilt-corrected, Magnetometer-based heading (requires */
-//			/* magnetometer calibration to be useful) */
-//
-//			SmartDashboard.putNumber("IMU_CompassHeading", navx.getCompassHeading());
-//
-//			/*
-//			 * Display 9-axis Heading (requires magnetometer calibration to be
-//			 * useful)
-//			 */
-//			SmartDashboard.putNumber("IMU_FusedHeading", navx.getFusedHeading());
-//
-//			/*
-//			 * These functions are compatible w/the WPI Gyro Class, providing a
-//			 * simple
-//			 */
-//			/* path for upgrading from the Kit-of-Parts gyro to the navx-MXP */
-//
-//			SmartDashboard.putNumber("IMU_TotalYaw", navx.getAngle());
-//			SmartDashboard.putNumber("IMU_YawRateDPS", navx.getRate());
-//
-//			/*
-//			 * Display Processed Acceleration Data (Linear Acceleration, Motion
-//			 * Detect)
-//			 */
-//
-//			SmartDashboard.putNumber("IMU_Accel_X", navx.getWorldLinearAccelX());
-//			SmartDashboard.putNumber("IMU_Accel_Y", navx.getWorldLinearAccelY());
-//			SmartDashboard.putBoolean("IMU_IsMoving", navx.isMoving());
-//			SmartDashboard.putBoolean("IMU_IsRotating", navx.isRotating());
-//
-//			/*
-//			 * Display estimates of velocity/displacement. Note that these
-//			 * values are
-//			 */
-//			/*
-//			 * not expected to be accurate enough for estimating robot position
-//			 * on a
-//			 */
-//			/*
-//			 * FIRST FRC Robotics Field, due to accelerometer noise and the
-//			 * compounding
-//			 */
-//			/*
-//			 * of these errors due to single (velocity) integration and
-//			 * especially
-//			 */
-//			/* double (displacement) integration. */
-//
-//			SmartDashboard.putNumber("Velocity_X", navx.getVelocityX());
-//			SmartDashboard.putNumber("Velocity_Y", navx.getVelocityY());
-//
-//			/* Display Raw Gyro/Accelerometer/Magnetometer Values */
-//			/*
-//			 * NOTE: These values are not normally necessary, but are made
-//			 * available
-//			 */
-//			/*
-//			 * for advanced users. Before using this data, please consider
-//			 * whether
-//			 */
-//			/* the processed data (see above) will suit your needs. */
-//
-//			/* Omnimount Yaw Axis Information */
-//			/*
-//			 * For more info, see
-//			 * http://navx-mxp.kauailabs.com/installation/omnimount
-//			 */
-//			AHRS.BoardYawAxis yaw_axis = navx.getBoardYawAxis();
-//			SmartDashboard.putString("YawAxisDirection", yaw_axis.up ? "Up" : "Down");
-//			SmartDashboard.putNumber("YawAxis", yaw_axis.board_axis.getValue());
-			SmartDashboard.putNumber("CLError", RobotMap.shooterMotor1.getClosedLoopError());
-			SmartDashboard.putNumber("RPM Actual", RobotMap.shooterMotor1.getSpeed());
-		} catch (NullPointerException e) {
-			DriverStation.reportError(e.getMessage(), true);
-			System.out.println(e.getMessage());
-		}
+//		SmartDashboard.putNumber("CLError", RobotMap.shooterMotor1.getClosedLoopError());
+//		SmartDashboard.putNumber("RPM Actual", RobotMap.shooterMotor1.getSpeed());
 	}
 
 	/**
@@ -221,7 +136,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-	    //sendData();
+		// sendData();
 	}
 
 	/**
@@ -231,10 +146,7 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 		LiveWindow.run();
 	}
-	
-	
-	
-	//This is the end of all methods
-	
-	
+
+	// This is the end of all methods
+
 }

@@ -9,7 +9,7 @@ public class ShiftLow extends Command {
        requires(Robot.pneumatics);
     }
     protected void execute() {
-    	Robot.pneumatics.shiftToHigh();	
+    	Robot.pneumatics.shiftToLow();	
     }
     protected boolean isFinished() {
         return false;

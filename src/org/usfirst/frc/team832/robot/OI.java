@@ -44,12 +44,12 @@ public class OI {
 		lowGear = new JoystickButton(driverPad, 5);
 		lowGear.whenPressed(new ShiftLow());
 		// winch
-		winchPull = new JoystickButton(driverPad, 1);
+		winchPull = new JoystickButton(operatorStick, 4);
 		winchPull.whileHeld(new WinchPull());
 		//collector
-		rollerOut = new JoystickButton(operatorStick, 4);
+		rollerOut = new JoystickButton(operatorStick, 5);
 		rollerOut.whileHeld( new CollectorEject());
-		rollerIn = new JoystickButton(operatorStick, 5);
+		rollerIn = new JoystickButton(operatorStick, 3);
 		rollerIn.whileHeld(new CollectorIntake());
 		//turntable
 		tableCW = new JoystickButton(operatorStick, 2);
