@@ -1,4 +1,4 @@
-package org.usfirst.frc.team832.robot.commands;
+package org.usfirst.frc.team832.robot.commands.teleop;
 
 import org.usfirst.frc.team832.robot.Robot;
 
@@ -7,16 +7,16 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class RPMTo3000 extends Command {
+public class RPMTo2000 extends Command {
 
-    public RPMTo3000() {
+    public RPMTo2000() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.shooter);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.shooter.setActualRPM(3000);
+    	Robot.shooter.setActualRPM(2000);
     }
 
     // Called repeatedly when this Command is scheduled to run

@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
 
-import org.usfirst.frc.team832.robot.commands.*;
+import org.usfirst.frc.team832.robot.commands.teleop.*;
+import org.usfirst.frc.team832.robot.commands.auto.*;
 import org.usfirst.frc.team832.robot.subsystems.*;
 
 /**
@@ -60,8 +61,10 @@ public class Robot extends IterativeRobot {
 		collector = new Collector();
 		bigWinch = new Winch();
 		oi = new OI();
-		chooser.addDefault("Default Auto", null);
-		// chooser.addObject("My Auto", new MyAutoCommand());
+		autonomousCommand = new AUTOMODE_DriveForward();
+		Robot.pneumatics.shiftToLow();
+		//chooser.addDefault("Default Auto", new AUTOMODE_DriveForward());
+		//chooser.addObject("Drive Forward", new AUTOMODE_DriveForward());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
 
@@ -98,14 +101,17 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
+		//autonomousCommand = chooser.getSelected();
 
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
+//		
+//		 String autoSelected = SmartDashboard.getString("Auto Selector", "Default"); 
+//		 switch(autoSelected) {
+//		 	case "My Auto": 
+//		 		autonomousCommand = new();
+//		 		break; 
+//		 	case "Default Auto": default:
+//		 autonomousCommand = new ExampleCommand(); break; }
+//		 
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)

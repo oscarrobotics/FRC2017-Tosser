@@ -2,6 +2,7 @@ package org.usfirst.frc.team832.robot.subsystems;
 
 import org.usfirst.frc.team832.robot.RobotMap;
 import org.usfirst.frc.team832.robot.commands.*;
+import org.usfirst.frc.team832.robot.commands.teleop.DriveWithJoysticks;
 
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -19,8 +20,12 @@ public class WestCoastDrive extends Subsystem {
     	RobotMap.westCoast.tankDrive(left, right);
     }
     
+    public void takeAutoInput(double left, double right) {
+    	RobotMap.westCoast.tankDrive(left, right);
+    }
+    
     public void stop() {
-		RobotMap.westCoast.drive(0,0);
+		RobotMap.westCoast.tankDrive(0,0);
 	}
    
 }

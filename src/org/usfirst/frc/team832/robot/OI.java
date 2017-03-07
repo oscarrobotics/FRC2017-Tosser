@@ -4,6 +4,17 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team832.robot.commands.*;
+import org.usfirst.frc.team832.robot.commands.teleop.CollectorEject;
+import org.usfirst.frc.team832.robot.commands.teleop.CollectorIntake;
+import org.usfirst.frc.team832.robot.commands.teleop.RPMTo2000;
+import org.usfirst.frc.team832.robot.commands.teleop.RPMTo2500;
+import org.usfirst.frc.team832.robot.commands.teleop.RPMTo3000;
+import org.usfirst.frc.team832.robot.commands.teleop.RunTheShooter;
+import org.usfirst.frc.team832.robot.commands.teleop.ShiftHigh;
+import org.usfirst.frc.team832.robot.commands.teleop.ShiftLow;
+import org.usfirst.frc.team832.robot.commands.teleop.TurnTableCW;
+import org.usfirst.frc.team832.robot.commands.teleop.WinchPull;
+import org.usfirst.frc.team832.robot.commands.teleop.WinchTilt;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -41,11 +52,13 @@ public class OI {
 		//drivetrain
 		highGear = new JoystickButton(driverPad, 6);
 		highGear.whenPressed(new ShiftHigh());
+		highGear.whenReleased(new ShiftLow());
 		lowGear = new JoystickButton(driverPad, 5);
-		lowGear.whenPressed(new ShiftLow());
+	//	lowGear.whenPressed(new ShiftLow());
 		// winch
 		winchPull = new JoystickButton(operatorStick, 4);
 		winchPull.whileHeld(new WinchPull());
+		// winchPull.whileHeld( new WinchWithStick());
 		//collector
 		rollerOut = new JoystickButton(operatorStick, 5);
 		rollerOut.whileHeld( new CollectorEject());

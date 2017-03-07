@@ -1,15 +1,15 @@
-package org.usfirst.frc.team832.robot.commands;
+package org.usfirst.frc.team832.robot.commands.teleop;
 
 import org.usfirst.frc.team832.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ShiftHigh extends Command {
+public class ShiftLow extends Command {
 
-    public ShiftHigh() {
+    public ShiftLow() {
        requires(Robot.pneumatics);
     }
     protected void execute() {
-    	Robot.pneumatics.shiftToHigh();	
+    	Robot.pneumatics.shiftToLow();	
     }
     protected boolean isFinished() {
         return false;

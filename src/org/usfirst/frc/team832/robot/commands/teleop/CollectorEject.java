@@ -1,20 +1,20 @@
-package org.usfirst.frc.team832.robot.commands;
+package org.usfirst.frc.team832.robot.commands.teleop;
 
 import org.usfirst.frc.team832.robot.Robot;
 import org.usfirst.frc.team832.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class TurnTableCW extends Command {
+public class CollectorEject extends Command {
 
-    public TurnTableCW() {
+	double collectorPower = Robot.collector.collectorPower;
+	
+    public CollectorEject() {
         // Use requires() here to declare subsystem dependencies
-    	requires(Robot.turnTable);
-    	requires(Robot.pneumatics);
+        requires(Robot.collector);
     }
 
     // Called just before this Command runs the first time
@@ -23,8 +23,7 @@ public class TurnTableCW extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.turnTable.set(.40);
-    	RobotMap.ballDoorSol.set(Value.kForward);
+    	RobotMap.collectorRoller.set(collectorPower);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -34,8 +33,7 @@ public class TurnTableCW extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	RobotMap.turnTable.set(.0);
-    	RobotMap.ballDoorSol.set(Value.kReverse);
+    	RobotMap.collectorRoller.set(0.0);
     }
 
     // Called when another command which requires one or more of the same

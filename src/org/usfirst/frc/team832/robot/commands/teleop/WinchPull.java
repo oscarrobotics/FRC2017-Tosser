@@ -1,20 +1,18 @@
-package org.usfirst.frc.team832.robot.commands;
+package org.usfirst.frc.team832.robot.commands.teleop;
 
 import org.usfirst.frc.team832.robot.Robot;
+import org.usfirst.frc.team832.robot.RobotMap;
+import org.usfirst.frc.team832.robot.subsystems.*;
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team832.robot.*;
 
 /**
  *
  */
-public class DriveWithJoysticks extends Command {
+public class WinchPull extends Command {
 
-	double leftStick = Robot.oi.driverPad.getRawAxis(1);
-	double rightStick = Robot.oi.driverPad.getRawAxis(5);
-	
-    public DriveWithJoysticks() {
+    public WinchPull() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.westCoastDrive);
+       requires(Robot.bigWinch);
     }
 
     // Called just before this Command runs the first time
@@ -23,7 +21,8 @@ public class DriveWithJoysticks extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.westCoastDrive.takeJoystickInputs(-Robot.oi.driverPad.getRawAxis(1), -Robot.oi.driverPad.getRawAxis(5));
+    	RobotMap.bigWinch.set(1.00);
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -33,7 +32,7 @@ public class DriveWithJoysticks extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.westCoastDrive.stop();
+    	RobotMap.bigWinch.set(0.0);
     }
 
     // Called when another command which requires one or more of the same

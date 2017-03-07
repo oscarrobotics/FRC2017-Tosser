@@ -1,18 +1,18 @@
-package org.usfirst.frc.team832.robot.commands;
+package org.usfirst.frc.team832.robot.commands.teleop;
 
 import org.usfirst.frc.team832.robot.Robot;
 import org.usfirst.frc.team832.robot.RobotMap;
-
 import edu.wpi.first.wpilibj.command.Command;
+
 
 /**
  *
  */
-public class CollectorEject extends Command {
+public class CollectorIntake extends Command {
 
 	double collectorPower = Robot.collector.collectorPower;
 	
-    public CollectorEject() {
+    public CollectorIntake() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.collector);
     }
@@ -23,7 +23,7 @@ public class CollectorEject extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.collectorRoller.set(collectorPower);
+    	RobotMap.collectorRoller.set(-0.7);
     }
 
     // Make this return true when this Command no longer needs to run execute()

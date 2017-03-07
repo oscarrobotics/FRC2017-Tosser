@@ -26,12 +26,12 @@ public class RobotMap {
 
 
 	// shooter
-//	public static int shooterMotor1ID = 7;
-//	public static int shooterMotor2ID = 8;
+	public static int shooterMotor1ID = 7;
+	public static int shooterMotor2ID = 8;
 	public static CANTalon shooterMotor1;
 	public static CANTalon shooterMotor2;
 
-//	// drivetrain
+	// drivetrain
 	public static int left1ID = 1;
 	public static int left2ID = 2;
 	public static int right1ID = 3;
@@ -84,7 +84,7 @@ public class RobotMap {
 		
 		shooterMotor1.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
 		shooterMotor1.changeControlMode(CANTalon.TalonControlMode.Speed);
-		shooterMotor1.setAllowableClosedLoopErr(20);
+		shooterMotor1.setAllowableClosedLoopErr(50);
 		
 		shooterMotor2.changeControlMode(CANTalon.TalonControlMode.Follower);
 		shooterMotor2.set(shooterMotor1.getDeviceID());
