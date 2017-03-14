@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /**
@@ -58,8 +59,9 @@ public class RobotMap {
 	public static final int pcmID = 9;
 	public static Compressor compressor;
 	public static DoubleSolenoid gearShiftSol;
+	public static DoubleSolenoid gearHolderSol;
 	public static Solenoid winchTiltSol;
-	public static DoubleSolenoid ballDoorSol;
+	public static Solenoid ballDoorSol;
 
 	// electronics
 	public static int pdpID = 0;
@@ -88,8 +90,8 @@ public class RobotMap {
 		
 		shooterMotor2.changeControlMode(CANTalon.TalonControlMode.Follower);
 		shooterMotor2.set(shooterMotor1.getDeviceID());
-		shooterMotor1.clearStickyFaults();
-		shooterMotor2.clearStickyFaults();
+	//	shooterMotor1.clearStickyFaults();
+	//	shooterMotor2.clearStickyFaults();
 		
 		//drivetrain
 		left1 = new CANTalon(1);
@@ -103,12 +105,17 @@ public class RobotMap {
 		left2.set(left1.getDeviceID());
 		right2.set(right1.getDeviceID());
 		
+		left1.setVoltageRampRate(128);
+		right1.setVoltageRampRate(128);
+		
 		left1.clearStickyFaults();
 		left2.clearStickyFaults();
 		right1.clearStickyFaults();
 		right2.clearStickyFaults();
+		left1.reverseSensor(true);
 		
 		westCoast = new RobotDrive(left1, right1);
+		
 
 		// intake
 		collectorRoller = new CANTalon(6);
@@ -121,9 +128,11 @@ public class RobotMap {
 		// pneumatics
 		compressor = new Compressor(9);
 		compressor.setClosedLoopControl(true);
-		gearShiftSol = new DoubleSolenoid(9,1, 0);
-		winchTiltSol = new Solenoid(9,2);
-		ballDoorSol = new DoubleSolenoid(9, 3, 4);
+		gearShiftSol = new DoubleSolenoid(9,1,0);
+		//gearShiftSol.set(Value.kForward);
+		gearHolderSol = new DoubleSolenoid(9,2,3);
+		winchTiltSol = new Solenoid(9,5);
+		ballDoorSol = new Solenoid(9,4);
 
 		// winch
 		bigWinch = new Spark(0);

@@ -24,8 +24,6 @@ public class TurnTableCW extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	RobotMap.turnTable.set(.40);
-    	if(Robot.shooter.shooterMotor.getSpeed()>1000)
-    	RobotMap.ballDoorSol.set(Value.kForward);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -35,8 +33,8 @@ public class TurnTableCW extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	RobotMap.turnTable.set(.0);
-    	RobotMap.ballDoorSol.set(Value.kReverse);
+    	RobotMap.turnTable.set(0);
+    //	RobotMap.ballDoorSol.set(true);
     }
 
     // Called when another command which requires one or more of the same

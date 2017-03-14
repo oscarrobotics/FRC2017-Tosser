@@ -10,6 +10,10 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import org.usfirst.frc.team832.robot.commands.teleop.*;
@@ -47,6 +51,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		
+
+	    CameraServer.getInstance().startAutomaticCapture(0).setVideoMode(PixelFormat.kMJPEG, 320, 240, 15);
 
 		try {
 			RobotMap.init();
@@ -63,8 +70,9 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		autonomousCommand = new AUTOMODE_DriveForward();
 		Robot.pneumatics.shiftToLow();
-		//chooser.addDefault("Default Auto", new AUTOMODE_DriveForward());
-		//chooser.addObject("Drive Forward", new AUTOMODE_DriveForward());
+		chooser.addDefault("Drive Forward", new AUTOMODE_DriveForward());
+		chooser.addObject("Center Gear", new AUTOMODE_CenterPeg());
+		chooser.addObject("Center Peg Distance", new AUTOMODE_CenterPegDistance());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
 
@@ -101,8 +109,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		RobotMap.gearHolderSol.set(Value.kReverse);
+		RobotMap.ballDoorSol.set(true);
 		//autonomousCommand = chooser.getSelected();
-
+		
 //		
 //		 String autoSelected = SmartDashboard.getString("Auto Selector", "Default"); 
 //		 switch(autoSelected) {
@@ -115,6 +125,7 @@ public class Robot extends IterativeRobot {
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
+			autonomousCommand = chooser.getSelected();
 			autonomousCommand.start();
 	}
 
@@ -128,12 +139,15 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
+		
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+		RobotMap.gearHolderSol.set(Value.kReverse);
+		RobotMap.ballDoorSol.set(true);
 	}
 
 	/**
@@ -142,6 +156,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		if(Robot.shooter.shooterMotor.getSpeed()>1800) {
+			RobotMap.ballDoorSol.set(false);
+		}
+		else {
+			RobotMap.ballDoorSol.set(true);
+		}
 		// sendData();
 	}
 

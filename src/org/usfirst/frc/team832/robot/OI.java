@@ -3,18 +3,7 @@ package org.usfirst.frc.team832.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-import org.usfirst.frc.team832.robot.commands.*;
-import org.usfirst.frc.team832.robot.commands.teleop.CollectorEject;
-import org.usfirst.frc.team832.robot.commands.teleop.CollectorIntake;
-import org.usfirst.frc.team832.robot.commands.teleop.RPMTo2000;
-import org.usfirst.frc.team832.robot.commands.teleop.RPMTo2500;
-import org.usfirst.frc.team832.robot.commands.teleop.RPMTo3000;
-import org.usfirst.frc.team832.robot.commands.teleop.RunTheShooter;
-import org.usfirst.frc.team832.robot.commands.teleop.ShiftHigh;
-import org.usfirst.frc.team832.robot.commands.teleop.ShiftLow;
-import org.usfirst.frc.team832.robot.commands.teleop.TurnTableCW;
-import org.usfirst.frc.team832.robot.commands.teleop.WinchPull;
-import org.usfirst.frc.team832.robot.commands.teleop.WinchTilt;
+import org.usfirst.frc.team832.robot.commands.teleop.*;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -30,6 +19,9 @@ public class OI {
 	// gear shifter
 	public final JoystickButton highGear;
 	public final JoystickButton lowGear;
+	
+	// gear holder
+	public final JoystickButton gearHolderOut;
 	// winch
 	public final JoystickButton winchPull;
 	public final JoystickButton winchTilt;
@@ -50,10 +42,10 @@ public class OI {
 		flywheelSpinUp = new JoystickButton(operatorStick, 1);
 		flywheelSpinUp.whileHeld(new RunTheShooter());
 		//drivetrain
-		highGear = new JoystickButton(driverPad, 6);
+		highGear = new JoystickButton(driverPad, 5);
 		highGear.whenPressed(new ShiftHigh());
 		highGear.whenReleased(new ShiftLow());
-		lowGear = new JoystickButton(driverPad, 5);
+		lowGear = new JoystickButton(driverPad, 6);
 	//	lowGear.whenPressed(new ShiftLow());
 		// winch
 		winchPull = new JoystickButton(operatorStick, 4);
@@ -72,6 +64,9 @@ public class OI {
 		winchTilt = new JoystickButton(operatorStick, 6);
 		winchTilt.whileHeld(new WinchTilt());
 		
+		// gear holder
+		gearHolderOut = new JoystickButton(operatorStick, 12);
+		gearHolderOut.whileHeld(new getGear());
 		
 		// shooter RPM setters
 		shooter2000 = new JoystickButton(operatorStick, 7);

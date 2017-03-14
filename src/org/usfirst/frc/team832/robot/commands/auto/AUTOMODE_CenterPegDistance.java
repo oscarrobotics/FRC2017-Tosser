@@ -1,16 +1,15 @@
 package org.usfirst.frc.team832.robot.commands.auto;
 
-import org.usfirst.frc.team832.robot.Robot;
+import org.usfirst.frc.team832.robot.commands.teleop.getGear;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  *
  */
-public class AUTOMODE_DriveForward extends CommandGroup {
+public class AUTOMODE_CenterPegDistance extends CommandGroup {
 
-    public AUTOMODE_DriveForward() {
-    	
+    public AUTOMODE_CenterPegDistance() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -27,7 +26,8 @@ public class AUTOMODE_DriveForward extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	addSequential(new AutoDrive(0.6, 0.0, 6));
-    	
+    	//addSequential(new AutoDriveDistance(0.5, 0.0, 3170));
+    	 addSequential(new AutoDriveDistance(-0.625, 0.0, 77.5));
+    	 addSequential(new getGear());
     }
 }

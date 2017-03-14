@@ -3,6 +3,8 @@ package org.usfirst.frc.team832.robot.commands.auto;
 import org.usfirst.frc.team832.robot.Robot;
 import org.usfirst.frc.team832.robot.RobotMap;
 
+import com.ctre.CANTalon.TalonControlMode;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -22,13 +24,15 @@ public class AutoDrive extends Command {
         requires(Robot.westCoastDrive);   
         this.power = power;           
         this.startDelay = startDelay;
-        this.runTime = runTime;
+        this.runTime = runTime * 1000;
     
     }
     // Called just before this Command runs the first time
     protected void initialize() {
     	//Timer.delay(4);
     	//Robot.westCoastDrive.takeAutoInput(0.5, 0.5);
+    	Robot.westCoastDrive.changeMode(TalonControlMode.PercentVbus);
+    	
     	startTime = System.currentTimeMillis();
     	isDone = false;
     	
@@ -36,13 +40,14 @@ public class AutoDrive extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(System.currentTimeMillis() >= startTime + 6000)
+    	if(System.currentTimeMillis() >= startTime + runTime)
     	{
     		isDone = true;
     	}
     	else
     	{
-    		Robot.westCoastDrive.takeAutoInput(0.5, 0.5);
+    		double power2 = power + .007;
+    		Robot.westCoastDrive.takeAutoInput(power, power2);
     		isDone=false;
     		
     	}
