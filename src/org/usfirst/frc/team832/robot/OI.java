@@ -31,11 +31,12 @@ public class OI {
     public final JoystickButton rollerOut;
 	// turntable
     public final JoystickButton tableCW;
+    public final JoystickButton tableCCW;
     
     // shooter RPM setters
-    public final JoystickButton shooter2000;
-    public final JoystickButton shooter2500;
-    public final JoystickButton shooter3000;
+//    public final JoystickButton shooter2000;
+//    public final JoystickButton shooter2500;
+//    public final JoystickButton shooter3000;
     
 	public OI() {
 		//flywheel
@@ -59,6 +60,8 @@ public class OI {
 		//turntable
 		tableCW = new JoystickButton(operatorStick, 2);
 		tableCW.whileHeld(new TurnTableCW());
+		tableCCW = new JoystickButton(operatorStick, 10);
+		tableCCW.whileHeld(new TurnTableCCW());
 		
 		// winch
 		winchTilt = new JoystickButton(operatorStick, 6);
@@ -69,14 +72,14 @@ public class OI {
 		gearHolderOut.whileHeld(new getGear());
 		
 		// shooter RPM setters
-		shooter2000 = new JoystickButton(operatorStick, 7);
-		shooter2000.whileHeld(new RPMTo2000());
-		
-		shooter2500 = new JoystickButton(operatorStick, 9);
-		shooter2500.whileHeld(new RPMTo2500());
-		
-		shooter3000 = new JoystickButton(operatorStick, 11);
-		shooter3000.whileHeld(new RPMTo3000());
+//		shooter2000 = new JoystickButton(operatorStick, 7);
+//		shooter2000.whileHeld(new RPMTo2000());
+//		
+//		shooter2500 = new JoystickButton(operatorStick, 9);
+//		shooter2500.whileHeld(new RPMTo2500());
+//		
+//		shooter3000 = new JoystickButton(operatorStick, 11);
+//		shooter3000.whileHeld(new RPMTo3000());
 		
 		
 		

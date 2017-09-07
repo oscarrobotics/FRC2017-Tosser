@@ -14,7 +14,6 @@ public class TurnTableCW extends Command {
     public TurnTableCW() {
         // Use requires() here to declare subsystem dependencies
     	requires(Robot.turnTable);
-    	requires(Robot.pneumatics);
     }
 
     // Called just before this Command runs the first time
@@ -23,7 +22,7 @@ public class TurnTableCW extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.turnTable.set(.40);
+    	RobotMap.turnTable.set(.6);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -34,7 +33,6 @@ public class TurnTableCW extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	RobotMap.turnTable.set(0);
-    //	RobotMap.ballDoorSol.set(true);
     }
 
     // Called when another command which requires one or more of the same

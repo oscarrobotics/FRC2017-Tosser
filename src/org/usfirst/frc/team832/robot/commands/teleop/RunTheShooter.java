@@ -16,7 +16,9 @@ public class RunTheShooter extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		Robot.shooter.runShooter();
+		double rippemBoost = 15 * -Robot.oi.operatorStick.getThrottle();
+		//double throttle = Robot.oi.operatorStick.getThrottle();
+		Robot.shooter.runShooter(rippemBoost);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

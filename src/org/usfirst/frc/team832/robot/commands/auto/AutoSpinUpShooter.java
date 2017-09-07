@@ -1,38 +1,38 @@
-package org.usfirst.frc.team832.robot.commands.teleop;
+package org.usfirst.frc.team832.robot.commands.auto;
 
 import org.usfirst.frc.team832.robot.Robot;
-import org.usfirst.frc.team832.robot.RobotMap;
-import org.usfirst.frc.team832.robot.subsystems.*;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class WinchPull extends Command {
+public class AutoSpinUpShooter extends Command {
 
-    public WinchPull() {
+	double rpm;
+	
+    public AutoSpinUpShooter(double rpm) {
         // Use requires() here to declare subsystem dependencies
-       requires(Robot.bigWinch);
+    	this.rpm = rpm;
+        requires(Robot.shooter);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.shooter.runShooter(rpm);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.winch.set(1);
-    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return Robot.shooter.onTarget();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	RobotMap.winch.set(0.0);
     }
 
     // Called when another command which requires one or more of the same

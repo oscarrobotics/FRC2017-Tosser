@@ -34,8 +34,8 @@ public class WestCoastDrive extends Subsystem {
     	RobotMap.westCoast.tankDrive(leftCubed, rightCubed);
     }
     
-    public void takeAutoInput(double left, double right) {
-    	RobotMap.westCoast.tankDrive(left, right);
+    public void autoDriveArcade(double pow, double rot) {
+    	RobotMap.westCoast.arcadeDrive(pow, rot, false);
     }
     public void changeMode(TalonControlMode controlMode){
       
@@ -44,6 +44,24 @@ public class WestCoastDrive extends Subsystem {
        
        
     }
+    public double getDistance() {
+    	double leftD, rightD;
+    	leftD = RobotMap.left1.getEncPosition();
+    	rightD = RobotMap.right1.getEncPosition();
+    	return (leftD + rightD)/2;
+    }
+    
+    public double getMin()
+    {
+    	return Math.min(RobotMap.left1.getEncPosition(), RobotMap.right1.getEncPosition());
+    }
+    
+    public double getMax()
+    {
+    	return Math.max(RobotMap.left1.getEncPosition(), RobotMap.right1.getEncPosition());
+    	
+    }
+    
     public void stop() {
 		RobotMap.westCoast.tankDrive(0,0);
 	}

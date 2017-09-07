@@ -23,7 +23,7 @@ public class CollectorEject extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.collectorRoller.set(collectorPower);
+    	RobotMap.intake.set(collectorPower);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -33,7 +33,7 @@ public class CollectorEject extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	RobotMap.collectorRoller.set(0.0);
+    	RobotMap.intake.set(0.0);
     }
 
     // Called when another command which requires one or more of the same

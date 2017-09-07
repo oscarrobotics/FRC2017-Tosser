@@ -29,7 +29,7 @@ public class WinchWithStick extends Command {
     protected void execute() {
     	 if (winchButton&&operatorStickY>0) //-> DELETE
 //   double operatorStickY = Math.abs(Robot.oi.operatorStick.getRawAxis(1));
-    	RobotMap.bigWinch.set(operatorStickY);
+    	RobotMap.winch.set(operatorStickY);
     }
 
     // Make this return true when this Command no longer needs to run execute()
