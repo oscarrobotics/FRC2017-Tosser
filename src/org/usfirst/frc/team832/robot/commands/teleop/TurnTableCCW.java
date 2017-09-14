@@ -1,36 +1,26 @@
-package org.usfirst.frc.team832.robot.commands;
+package org.usfirst.frc.team832.robot.commands.teleop;
 
-import org.usfirst.frc.team832.robot.Robot;
-import org.usfirst.frc.team832.robot.subsystems.*;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team832.robot.RobotMap;
 
-
-
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class UpShift extends Command {
+public class TurnTableCCW extends Command {
 
-	
-    public UpShift() {
+    public TurnTableCCW() {
         // Use requires() here to declare subsystem dependencies
-       requires(Robot.westCoastDrive);
+        // eg. requires(chassis);
     }
-    
-	// Called just before this Command runs the first time
+
+    // Called just before this Command runs the first time
     protected void initialize() {
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.gearShift.set(Value.kForward);
-    
-    	
+    	RobotMap.turnTable.set(-.6);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -40,6 +30,7 @@ public class UpShift extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	RobotMap.turnTable.set(0);
     }
 
     // Called when another command which requires one or more of the same

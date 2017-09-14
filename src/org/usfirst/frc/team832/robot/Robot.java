@@ -7,12 +7,23 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import org.usfirst.frc.team832.robot.commands.*;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DriverStation;
+
+import org.usfirst.frc.team832.robot.commands.teleop.*;
+import org.usfirst.frc.team832.robot.commands.auto.*;
+import org.usfirst.frc.team832.robot.commands.automodes.AUTOMODE_CenterGear;
+import org.usfirst.frc.team832.robot.commands.automodes.AUTOMODE_DoNothing;
+import org.usfirst.frc.team832.robot.commands.automodes.AUTOMODE_DriveForward;
+import org.usfirst.frc.team832.robot.commands.automodes.AUTOMODE_HighGoal_LeftBlue;
+import org.usfirst.frc.team832.robot.commands.automodes.AUTOMODE_LeftGear;
+import org.usfirst.frc.team832.robot.commands.automodes.AUTOMODE_RightGear;
 import org.usfirst.frc.team832.robot.subsystems.*;
 
 /**
@@ -26,14 +37,26 @@ public class Robot extends IterativeRobot {
 
 	public static Shooter shooter;
 	public static WestCoastDrive westCoastDrive;
+	public static GyroPid gyroPid;
 	public static Pneumatics pneumatics;
 	public static Collector collector;
 	public static Winch bigWinch;
 	public static Turntable turnTable;
 	public static OI oi;
-	
 
-	public static AHRS navx = RobotMap.navx;
+	// public static double shooterSetRPM =
+	// RobotMap.shooterMotor1.getSetpoint(); // what the shooter should be set
+	// at
+	// public static double shooterActualRPM =
+	// RobotMap.shooterMotor1.getSpeed(); // what it is at
+	// public static double shooterCurrentDraw =
+	// RobotMap.shooterMotor1.getOutputCurrent() +
+	// RobotMap.shooterMotor2.getOutputCurrent();
+
+	// public static AHRS navx = RobotMap.navx;
+	
+	static RobotMode currentRobotMode = RobotMode.INIT, previousRobotMode;
+	
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -43,69 +66,59 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+
+		CameraServer.getInstance().startAutomaticCapture(0).setVideoMode(PixelFormat.kMJPEG, 320, 240, 15);
+
 		RobotMap.init();
-		
+
 		shooter = new Shooter();
 		turnTable = new Turntable();
 		westCoastDrive = new WestCoastDrive();
+		gyroPid = new GyroPid();
 		pneumatics = new Pneumatics();
 		collector = new Collector();
 		bigWinch = new Winch();
 		oi = new OI();
-		chooser.addDefault("Default Auto", new RunTheShooter());
-		// chooser.addObject("My Auto", new MyAutoCommand());
+		autonomousCommand = new AUTOMODE_DriveForward();
+		Robot.pneumatics.shiftToLow();
+		chooser.addDefault("Drive Forward", new AUTOMODE_DriveForward());
+		// chooser.addObject("Center Gear", new AUTOMODE_CenterPeg());
+		chooser.addObject("Center Gear", new AUTOMODE_CenterGear());
+		chooser.addObject("Left Gear", new AUTOMODE_LeftGear());
+		chooser.addObject("LB-HighShooter", new AUTOMODE_HighGoal_LeftBlue());
+		chooser.addObject("Right Gear", new AUTOMODE_RightGear());
+		chooser.addObject("Do Nothing", new AUTOMODE_DoNothing());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
-	
-	
+
 	public void sendData() {
-		 SmartDashboard.putBoolean(  "IMU_Connected",        navx.isConnected());
-         SmartDashboard.putBoolean(  "IMU_IsCalibrating",    navx.isCalibrating());
-         SmartDashboard.putNumber(   "IMU_Yaw",              navx.getYaw());
-         SmartDashboard.putNumber(   "IMU_Pitch",            navx.getPitch());
-         SmartDashboard.putNumber(   "IMU_Roll",             navx.getRoll());
-         
-         /* Display tilt-corrected, Magnetometer-based heading (requires             */
-         /* magnetometer calibration to be useful)                                   */
-         
-         SmartDashboard.putNumber(   "IMU_CompassHeading",   navx.getCompassHeading());
-         
-         /* Display 9-axis Heading (requires magnetometer calibration to be useful)  */
-         SmartDashboard.putNumber(   "IMU_FusedHeading",     navx.getFusedHeading());
+		double leftD = RobotMap.left1.getEncPosition();
+		double rightD = RobotMap.right1.getEncPosition();
+		SmartDashboard.putBoolean("NavX IsConnected", RobotMap.navx.isConnected());
+		SmartDashboard.putNumber("NavX Yaw", RobotMap.navx.getYaw());
+		SmartDashboard.putNumber("NavX Angle", RobotMap.navx.getAngle());
+		SmartDashboard.putNumber("Left Encoder", leftD);
+		SmartDashboard.putNumber("Right Encoder", rightD);
+		SmartDashboard.putData("GyroPID", Robot.gyroPid.getPIDController());
 
-         /* These functions are compatible w/the WPI Gyro Class, providing a simple  */
-         /* path for upgrading from the Kit-of-Parts gyro to the navx-MXP            */
-         
-         SmartDashboard.putNumber(   "IMU_TotalYaw",         navx.getAngle());
-         SmartDashboard.putNumber(   "IMU_YawRateDPS",       navx.getRate());
+		// shooter stuff
+		SmartDashboard.putNumber("Shooter Rippems", RobotMap.shooterMotor1.getSpeed());
+		SmartDashboard.putNumber("Shooter Setpoint", RobotMap.shooterMotor1.getSetpoint());
+		SmartDashboard.putNumber("Shooter Error", RobotMap.shooterMotor1.getClosedLoopError());
 
-         /* Display Processed Acceleration Data (Linear Acceleration, Motion Detect) */
-         
-         SmartDashboard.putNumber(   "IMU_Accel_X",          navx.getWorldLinearAccelX());
-         SmartDashboard.putNumber(   "IMU_Accel_Y",          navx.getWorldLinearAccelY());
-         SmartDashboard.putBoolean(  "IMU_IsMoving",         navx.isMoving());
-         SmartDashboard.putBoolean(  "IMU_IsRotating",       navx.isRotating());
+		// winch
+		SmartDashboard.putNumber("Winch Current", RobotMap.winch.getOutputCurrent());
+		
+		// drivetrain
+		SmartDashboard.putNumber("Left1 Current", RobotMap.left1.getOutputCurrent());
+		SmartDashboard.putNumber("Left2 Current", RobotMap.left2.getOutputCurrent());
+		SmartDashboard.putNumber("Right1 Current", RobotMap.right1.getOutputCurrent());
+		SmartDashboard.putNumber("Right2 Current", RobotMap.right2.getOutputCurrent());
 
-         /* Display estimates of velocity/displacement.  Note that these values are  */
-         /* not expected to be accurate enough for estimating robot position on a    */
-         /* FIRST FRC Robotics Field, due to accelerometer noise and the compounding */
-         /* of these errors due to single (velocity) integration and especially      */
-         /* double (displacement) integration.                                       */
-         
-         SmartDashboard.putNumber(   "Velocity_X",           navx.getVelocityX());
-         SmartDashboard.putNumber(   "Velocity_Y",           navx.getVelocityY());
-         
-         /* Display Raw Gyro/Accelerometer/Magnetometer Values                       */
-         /* NOTE:  These values are not normally necessary, but are made available   */
-         /* for advanced users.  Before using this data, please consider whether     */
-         /* the processed data (see above) will suit your needs.                     */
-         
-         
-         /* Omnimount Yaw Axis Information                                           */
-         /* For more info, see http://navx-mxp.kauailabs.com/installation/omnimount  */
-         AHRS.BoardYawAxis yaw_axis = navx.getBoardYawAxis();
-         SmartDashboard.putString(   "YawAxisDirection",     yaw_axis.up ? "Up" : "Down" );
-         SmartDashboard.putNumber(   "YawAxis",              yaw_axis.board_axis.getValue() );
+		// SmartDashboard.putNumber("CLError",
+		// RobotMap.shooterMotor1.getClosedLoopError());
+		// SmartDashboard.putNumber("RPM Actual",
+		// RobotMap.shooterMotor1.getSpeed());
 	}
 
 	/**
@@ -115,12 +128,14 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
+		 Robot.shooter.stopShooter();
+		 RobotMap.ballDoorSol.set(true);
 	}
 
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		sendData();
 	}
 
 	/**
@@ -136,18 +151,30 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
+		RobotMap.gearHolderSol.set(Value.kReverse);
+		RobotMap.ballDoorSol.set(true);
+		Robot.pneumatics.shiftToLow();
+		sendData();
+		// autonomousCommand = chooser.getSelected();
 
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
+		//
+		// String autoSelected = SmartDashboard.getString("Auto Selector",
+		// "Default");
+		// switch(autoSelected) {
+		// case "My Auto":
+		// autonomousCommand = new();
+		// break;
+		// case "Default Auto": default:
+		// autonomousCommand = new ExampleCommand(); break; }
+		//
 
 		// schedule the autonomous command (example)
+		RobotMap.left1.setEncPosition(0);
+		RobotMap.right1.setEncPosition(0);
+		RobotMap.navx.zeroYaw();
 		if (autonomousCommand != null)
-			autonomousCommand.start();
+			autonomousCommand = chooser.getSelected();
+		autonomousCommand.start();
 	}
 
 	/**
@@ -155,17 +182,26 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		sendData();
 		Scheduler.getInstance().run();
 	}
 
 	@Override
 	public void teleopInit() {
+
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+
+		RobotMap.left1.setEncPosition(0);
+		RobotMap.right1.setEncPosition(0);
+		RobotMap.navx.zeroYaw();
+		RobotMap.gearHolderSol.set(Value.kReverse);
+		RobotMap.ballDoorSol.set(true);
+		Robot.pneumatics.shiftToLow();
 	}
 
 	/**
@@ -174,7 +210,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-	    
+		if (Robot.shooter.shooterMotor.getSpeed() > 1200) {
+			RobotMap.ballDoorSol.set(false);
+		} else {
+			RobotMap.ballDoorSol.set(true);
+		}
+		sendData();
 	}
 
 	/**
@@ -184,10 +225,15 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 		LiveWindow.run();
 	}
+
+	public static RobotMode getCurrentRobotMode() {
+        return currentRobotMode;
+    }
+
+    public static RobotMode getPreviousRobotMode() {
+        return previousRobotMode;
+    }
 	
-	
-	
-	//This is the end of all methods
-	
-	
+	// This is the end of all methods
+
 }

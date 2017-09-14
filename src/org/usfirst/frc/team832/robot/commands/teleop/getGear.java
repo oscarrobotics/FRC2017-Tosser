@@ -1,18 +1,19 @@
-package org.usfirst.frc.team832.robot.commands;
+package org.usfirst.frc.team832.robot.commands.teleop;
 
 import org.usfirst.frc.team832.robot.Robot;
 import org.usfirst.frc.team832.robot.RobotMap;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class WinchRelease extends Command {
+public class getGear extends Command {
 
-    public WinchRelease() {
+    public getGear() {
         // Use requires() here to declare subsystem dependencies
-         requires(Robot.bigWinch);
+        requires(Robot.pneumatics);
     }
 
     // Called just before this Command runs the first time
@@ -21,7 +22,7 @@ public class WinchRelease extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.bigWinch.set(-.10);
+    	RobotMap.gearHolderSol.set(Value.kForward);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -31,7 +32,7 @@ public class WinchRelease extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	RobotMap.bigWinch.set(0.0);
+    	RobotMap.gearHolderSol.set(Value.kReverse);
     }
 
     // Called when another command which requires one or more of the same
